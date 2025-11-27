@@ -1,4 +1,3 @@
-// sample items with authors pour tester top authors
 const sampleItemsAuthors = [
   { volumeInfo:{ authors:["Alice","Bob"], title:"A" } },
   { volumeInfo:{ authors:["Alice"], title:"B" } },
@@ -16,6 +15,20 @@ window.addEventListener('load', () => {
         window.updateTopAuthors(sampleItemsAuthors);
       } else {
         console.warn('updateTopAuthors non défini');
+      }
+    });
+  } else {
+    console.warn('bouton load-sample-authors introuvable');
+  }
+
+  // loader timeline sample si besoin
+  const btn = document.getElementById('load-sample');
+  if (btn) {
+    btn.addEventListener('click', () => {
+      if (typeof window.updateTimelineFromItems === 'function') {
+        window.updateTimelineFromItems(sampleItemsAuthors); // ou sampleItems pour timeline
+      } else {
+        console.warn('updateTimelineFromItems non défini');
       }
     });
   }
