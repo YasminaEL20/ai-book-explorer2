@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Book Explorer</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <meta name="description" content="AI Book Explorer – Trouvez vos livres facilement grâce à une recherche intelligente.">
+</head>
+
+<body>
+  <!-- Background layers -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg-layer"></div>
+    <canvas id="bgParticles" aria-hidden="true"></canvas>
+  </div>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-container center-header">
+
+      <!-- Logo image (veille à ce que le chemin existe: assets/img/icone.png) -->
+      <img src="assets/img/icone.png" alt="Logo AI Book Explorer" class="logo-img"/>
+
+      <!-- Title block centered -->
+      <div class="title-box">
+        <h1 class="main-title">AI Book Explorer</h1>
+        <p class="subtitle">Trouvez vos livres à partir d'ici !</p>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="container main-content">
+    <section class="search-wrap" aria-label="Recherche de livres">
+      <div class="search-inner">
+        <input id="searchInput" type="search" placeholder="Rechercher des livres (ex: Robots, Love, War)" aria-label="Recherche de livres" />
+        <button id="searchBtn" aria-label="Lancer la recherche">🔎</button>
+      </div>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="results" class="results" aria-live="polite"></section>
+
+    <div class="pagination">
+      <button id="prevBtn" class="btn ghost" disabled>Précédent</button>
+      <span id="pageInfo" class="page-info"></span>
+      <button id="nextBtn" class="btn ghost" disabled>Suivant</button>
+    </div>
+  </main>
+
+  <!-- Modal detail -->
+  <div id="detailModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-content" role="document">
+      <button id="closeDetail" class="close" aria-label="Fermer">✕</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <script src="assets/js/bg.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>
