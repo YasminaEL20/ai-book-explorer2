@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top Authors (Test Feature)</title>
+
+  <link rel="stylesheet" href="assets/CSS/style.css">
+
+  <!-- Chargement de Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+  <!-- ======= Top Authors section ======= -->
+  <section id="top-authors-section">
+    <h2>Top auteurs (Top 5)</h2>
+
+    <div class="controls">
+      <label for="authors-chart-type">Type :</label>
+      <select id="authors-chart-type">
+        <option value="bar">Barres</option>
+        <option value="pie">Camembert</option>
+      </select>
+
+      <button id="load-sample-authors">Charger échantillon auteurs</button>
+    </div>
+
+    <div class="chart-wrap" style="height:360px; max-width:1000px;">
+      <canvas id="topAuthorsChart"></canvas>
+    </div>
+  </section>
+  <!-- ======= end Top Authors section ======= -->
+
+  <!-- Scripts JS de ta feature -->
+  <script src="assets/js/charts.js"></script>
+  <script src="assets/js/app.js"></script>
+
+</body>
+</html>

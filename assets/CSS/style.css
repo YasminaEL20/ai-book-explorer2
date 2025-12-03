@@ -1,0 +1,4 @@
+/* réutiliser les règles du timeline */
+.chart-wrap { position: relative; height: 360px; }
+canvas#topAuthorsChart { width: 100% !important; height: 100% !important; display:block; }
+.controls { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
