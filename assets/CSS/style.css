@@ -29,7 +29,7 @@ body{
 
 section.page-section{margin-bottom:24px}
 
-/* chart specific container (kept from feature/charts-timeline) */
+/* chart specific container (shared) */
 .chart-wrap { 
   background:var(--card);
   border-radius:10px;
@@ -39,13 +39,14 @@ section.page-section{margin-bottom:24px}
   height:360px;
 }
 
-/* make all canvases responsive; keep the more specific ID rule too */
+/* make all canvases responsive; keep the more specific ID rules too */
 canvas{width:100% !important;height:100% !important;display:block}
 canvas#timelineChart { width: 100% !important; height: 100% !important; display: block; }
+canvas#topAuthorsChart { width: 100% !important; height: 100% !important; display: block; }
 
 .footer{margin-top:36px;padding:18px 20px;text-align:center;color:var(--muted);font-size:0.95rem}
 
-/* controls style for charts (kept and slightly normalized) */
+/* controls style for charts (kept and normalized) */
 .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
 .controls { display:flex; gap:10px; align-items:center; margin-bottom:10px; }
 
