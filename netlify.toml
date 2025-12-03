@@ -1,0 +1,15 @@
+# netlify.toml - config minimale pour site statique
+[build]
+  publish = "/"      # si ton site est à la racine
+  command = ""       # vide pour site statique
+
+[context.production.environment]
+  NODE_VERSION = "18"
+
+[context.deploy-preview]
+  command = ""
+  publish = "/"
+
+[context.branch-deploy]
+  command = ""
+  publish = "/"

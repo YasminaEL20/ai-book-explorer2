@@ -2,19 +2,59 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top Authors (Test Feature)</title>
-
-  <link rel="stylesheet" href="assets/CSS/style.css">
-
-  <!-- Chargement de Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AI Book Explorer — Visualisations</title>
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
 
+<header class="header">
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+    <div class="brand">
+      <div class="logo">AI</div>
+      <div>
+        <div style="font-weight:700">AI-Book-Explorer</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.9)">Recherche & Visualisations</div>
+      </div>
+    </div>
+
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+      <a href="index.html">Accueil</a>
+      <a href="visualizations.html">Visualisations</a>
+    </nav>
+
+    <button class="menu-btn" aria-expanded="false">Menu</button>
+  </div>
+</header>
+
+<main class="container">
+
+  <h1>Bienvenue dans AI-Book-Explorer — Visualisations</h1>
+  <p>Recherchez des livres grâce à Google Books et visualisez les données sous forme de graphiques.</p>
+
+  <!-- ======= Timeline section ======= -->
+  <section id="charts-section">
+    <h2>Timeline — Nombre de livres par année</h2>
+
+    <div class="controls">
+      <label for="chart-type">Type :</label>
+      <select id="chart-type">
+        <option value="line">Ligne</option>
+        <option value="bar">Barres</option>
+      </select>
+
+      <button id="load-sample">Charger échantillon</button>
+    </div>
+
+    <div class="chart-wrap" style="height:360px; max-width:1000px;">
+      <canvas id="timelineChart" aria-label="Timeline chart"></canvas>
+    </div>
+  </section>
+  <!-- ======= end Timeline section ======= -->
+
   <!-- ======= Top Authors section ======= -->
-  <section id="top-authors-section">
+  <section id="top-authors-section" style="margin-top:28px;">
     <h2>Top auteurs (Top 5)</h2>
 
     <div class="controls">
@@ -28,14 +68,26 @@
     </div>
 
     <div class="chart-wrap" style="height:360px; max-width:1000px;">
-      <canvas id="topAuthorsChart"></canvas>
+      <canvas id="topAuthorsChart" aria-label="Top authors chart"></canvas>
     </div>
   </section>
   <!-- ======= end Top Authors section ======= -->
 
-  <!-- Scripts JS de ta feature -->
-  <script src="assets/js/charts.js"></script>
-  <script src="assets/js/app.js"></script>
+  <!-- (tu peux ajouter d'autres sections/visualisations ici) -->
+
+</main>
+
+<footer class="footer">
+  <div class="container">
+    © 2025 AI-Book-Explorer — Conçu par Yasmina & Salsabil
+  </div>
+</footer>
+
+<!-- SCRIPTS: ordre important -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="assets/js/charts.js" defer></script>
+<script src="assets/js/app.js" defer></script>
+<script src="assets/js/ui.js" defer></script>
 
 </body>
 </html>
