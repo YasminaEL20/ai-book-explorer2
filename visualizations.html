@@ -1,0 +1,26 @@
+<!-- ======= section charts ======= -->
+<section id="charts-section">
+  <h2>Timeline — Nombre de livres par année</h2>
+
+  <div class="controls">
+    <label for="chart-type">Type :</label>
+    <select id="chart-type">
+      <option value="line">Ligne</option>
+      <option value="bar">Barres</option>
+    </select>
+
+    <button id="load-sample">Charger échantillon</button>
+  </div>
+
+  <div class="chart-wrap" style="height:360px; max-width:1000px;">
+    <canvas id="timelineChart" aria-label="Timeline chart"></canvas>
+  </div>
+</section>
+<!-- ======= end section charts ======= -->
+
+<!-- SCRIPTS: ordre important -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="assets/js/charts.js" defer></script>
+<script src="assets/js/app.js" defer></script>
+</body>
+</html>
