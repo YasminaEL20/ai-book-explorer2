@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>AI Book Explorer</title>
-  <link rel="stylesheet" href="assets/CSS/style.css">
+  <title>AI Book Explorer — Visualisations</title>
+  <link rel="stylesheet" href="assets/css/style.css">
 </head>
 
 <body>
@@ -30,10 +30,30 @@
 
 <main class="container">
 
-  <h1>Bienvenue dans AI-Book-Explorer</h1>
+  <h1>Bienvenue dans AI-Book-Explorer — Visualisations</h1>
   <p>Recherchez des livres grâce à Google Books et visualisez les données sous forme de graphiques.</p>
 
-  <!-- ICI ton contenu de recherche (si tu veux l’ajouter plus tard) -->
+  <!-- ======= section charts ======= -->
+  <section id="charts-section">
+    <h2>Timeline — Nombre de livres par année</h2>
+
+    <div class="controls">
+      <label for="chart-type">Type :</label>
+      <select id="chart-type">
+        <option value="line">Ligne</option>
+        <option value="bar">Barres</option>
+      </select>
+
+      <button id="load-sample">Charger échantillon</button>
+    </div>
+
+    <div class="chart-wrap" style="height:360px; max-width:1000px;">
+      <canvas id="timelineChart" aria-label="Timeline chart"></canvas>
+    </div>
+  </section>
+  <!-- ======= end section charts ======= -->
+
+  <!-- (tu peux ajouter d'autres sections/visualisations ici) -->
 
 </main>
 
@@ -43,6 +63,10 @@
   </div>
 </footer>
 
+<!-- SCRIPTS: ordre important -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="assets/js/charts.js" defer></script>
+<script src="assets/js/app.js" defer></script>
 <script src="assets/js/ui.js" defer></script>
 
 </body>
