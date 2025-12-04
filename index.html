@@ -4,15 +4,141 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>AI Book Explorer</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
   <link rel="stylesheet" href="assets/CSS/style.css">
+  <link rel="stylesheet" href="assets/CSS/filters.css"> <!-- Nouveau : Filtres -->
+
+  <meta name="description" content="AI Book Explorer – Trouvez vos livres grâce à une recherche intelligente.">
 </head>
 
 <body>
 
-<header class="header">
-  <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
-    <div class="brand">
-      <div class="logo">AI</div>
-      <div>
-        <div style="font-weight:700">AI-Book-Explorer</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.9)">Recherche & Visualisa
+  <!-- Background layers (vient du nouveau design) -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg-layer"></div>
+    <canvas id="bgParticles" aria-hidden="true"></canvas>
+  </div>
+
+  <!-- Nouveau header centré (version feature/search-filters) -->
+  <header class="site-header">
+    <div class="container header-container center-header">
+
+      <img src="assets/img/icone.png" alt="Logo AI Book Explorer" class="logo-img"/>
+
+      <div class="title-box">
+        <h1 class="main-title">AI Book Explorer</h1>
+        <p class="subtitle">Trouvez vos livres à partir d'ici !</p>
+      </div>
+
+    </div>
+  </header>
+
+  <main class="container main-content">
+
+    <!-- Zone recherche -->
+    <section class="search-wrap" aria-label="Recherche de livres">
+      <div class="search-inner">
+        <input id="searchInput" type="search" placeholder="Rechercher des livres (ex: Robots, Love, War)" aria-label="Recherche de livres">
+        <button id="searchBtn" aria-label="Lancer la recherche">🔎</button>
+      </div>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <!-- Toggle mobile pour filtres -->
+    <button id="filters-toggle" class="filters-toggle" aria-label="Ouvrir les filtres">Filtres</button>
+
+    <!-- Panneau de filtres -->
+    <aside id="filters-panel" class="filters-panel" aria-hidden="true">
+      <div class="filters-header">
+        <h3>Filtres</h3>
+        <button id="filters-close" class="filters-close" aria-label="Fermer">×</button>
+      </div>
+
+      <form id="filters-form">
+        <div class="field">
+          <label for="author">Auteur</label>
+          <input type="text" id="author" name="author" placeholder="ex: Isaac Asimov">
+        </div>
+
+        <div class="field">
+          <label for="category">Catégorie</label>
+          <select id="category" name="category">
+            <option value="">Toutes</option>
+            <option value="Fiction">Fiction</option>
+            <option value="Science-fiction">Science-fiction</option>
+            <option value="Romance">Romance</option>
+            <option value="Histoire">Histoire</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="year">Année min.</label>
+          <input type="number" id="year" name="year" min="1800" max="2025" placeholder="ex: 2000">
+        </div>
+
+        <div class="field">
+          <label for="type">Type</label>
+          <select id="type" name="type">
+            <option value="">Tous</option>
+            <option value="books">Livres</option>
+            <option value="magazines">Magazines</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="rating">Note min.</label>
+          <select id="rating" name="rating">
+            <option value="">Toutes</option>
+            <option value="3">3+ étoiles</option>
+            <option value="4">4+ étoiles</option>
+          </select>
+        </div>
+
+        <div class="filters-actions">
+          <button type="button" id="btn-apply" class="btn-apply" disabled>Appliquer</button>
+          <button type="button" id="btn-reset" class="btn-reset" disabled>Réinitialiser</button>
+        </div>
+      </form>
+
+      <div id="filters-chips" class="filters-chips"></div>
+
+      <div id="filters-loader" class="filters-loader"></div>
+      <div id="filters-status" class="filters-status" aria-live="polite"></div>
+    </aside>
+
+    <!-- Résultats -->
+    <section id="results" class="results" aria-live="polite"></section>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <button id="prevBtn" class="btn ghost" disabled>Précédent</button>
+      <span id="pageInfo" class="page-info"></span>
+      <button id="nextBtn" class="btn ghost" disabled>Suivant</button>
+    </div>
+
+  </main>
+
+  <!-- Modal -->
+  <div id="detailModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-content" role="document">
+      <button id="closeDetail" class="close" aria-label="Fermer">✕</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="assets/js/bg.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+  <script src="assets/js/readingAnim.js" defer></script>
+
+  <!-- Nouveaux scripts filtres -->
+  <script src="assets/js/filters-ui.js" defer></script>
+  <script src="assets/js/search-filters.js" defer></script>
+
+</body>
+</html>

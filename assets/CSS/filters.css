@@ -1,0 +1,185 @@
+/* assets/css/filters.css */
+/* Styles for the filters panel – modern, dark theme, responsive */
+
+.filters-panel {
+  position: fixed;
+  top: 0;
+  left: -320px;
+  width: 320px;
+  height: 100vh;
+  background: var(--card);
+  border-right: 1px solid var(--surface);
+  padding: 1.5rem;
+  overflow-y: auto;
+  transition: left 0.3s var(--ease);
+  z-index: 20;
+}
+
+.filters-panel.open {
+  left: 0;
+}
+
+.filters-toggle {
+  display: none; /* hidden on desktop */
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 30;
+}
+
+@media (max-width: 920px) {
+  .filters-toggle { display: block; }
+  .filters-panel { width: 80vw; max-width: 320px; }
+}
+
+.filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.filters-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.filters-close {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.filters-form .field {
+  margin-bottom: 1.2rem;
+}
+
+.filters-form label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+
+.filters-form input,
+.filters-form select {
+  width: 100%;
+  padding: 0.7rem;
+  background: var(--glass);
+  border: 1px solid var(--surface);
+  border-radius: var(--radius);
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.filters-form input:focus,
+.filters-form select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.filters-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.filters-actions button {
+  flex: 1;
+  padding: 0.8rem;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-apply {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+}
+
+.btn-apply:hover { background: var(--accent-2); }
+
+.btn-reset {
+  background: transparent;
+  border: 1px solid var(--muted);
+  color: var(--muted);
+}
+
+.btn-reset:hover { border-color: var(--accent); color: var(--accent); }
+
+.btn-apply:disabled,
+.btn-reset:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.filters-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.chip {
+  background: var(--glass);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chip-remove {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.filters-status {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.filters-loader {
+  border: 2px solid var(--accent);
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+  margin: 1rem auto;
+  display: none;
+}
+
+.filters-loader.active { display: block; }
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Error message */
+.error-msg {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .filters-panel { transition: none; }
+}
