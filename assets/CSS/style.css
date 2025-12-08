@@ -191,7 +191,7 @@ button[disabled]{opacity:0.6;cursor:not-allowed}
 /* detail button floating */
 .detail-wrap{display:flex;align-items:center;gap:12px;margin-top:8px}
 .btn{border-radius:999px;padding:8px 18px;border:none;cursor:pointer}
-.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#042;box-shadow:0 8px 22px rgba(79,195,247,0.12)}
+.btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:rgb(185, 201, 193);box-shadow:0 8px 22px rgba(79,195,247,0.12)}
 .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
 
 /* skeleton */
@@ -206,10 +206,11 @@ button[disabled]{opacity:0.6;cursor:not-allowed}
 /* modal */
 .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s var(--ease)}
 .modal.open{opacity:1;pointer-events:auto}
-.modal-backdrop{position:absolute;inset:0;background:rgba(2,6,23,0.6);backdrop-filter:blur(6px)}
+.modal-backdrop{position:absolute;inset:0;background:rgba(165, 167, 177, 0.6);backdrop-filter:blur(6px)}
 .modal-content{position:relative;z-index:2;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:20px;border-radius:12px;width:min(840px,92%);transform:translateY(10px) scale(.98);transition:transform .36s var(--ease),opacity .28s var(--ease);opacity:0}
 .modal.open .modal-content{transform:none;opacity:1}
 .close{position:absolute;right:12px;top:10px;border:none;background:transparent;color:var(--muted);font-size:18px;cursor:pointer}
+
 
 /* reduced motion */
 @media (prefers-reduced-motion:reduce){

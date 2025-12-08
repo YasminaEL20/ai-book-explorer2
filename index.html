@@ -10,20 +10,20 @@
 
   <!-- Styles -->
   <link rel="stylesheet" href="assets/CSS/style.css">
-  <link rel="stylesheet" href="assets/CSS/filters.css"> <!-- Nouveau : Filtres -->
+  <link rel="stylesheet" href="assets/CSS/filters.css">
 
   <meta name="description" content="AI Book Explorer – Trouvez vos livres grâce à une recherche intelligente.">
 </head>
 
 <body>
 
-  <!-- Background layers (vient du nouveau design) -->
+  <!-- Background -->
   <div class="bg" aria-hidden="true">
     <div class="bg-layer"></div>
     <canvas id="bgParticles" aria-hidden="true"></canvas>
   </div>
 
-  <!-- Nouveau header centré (version feature/search-filters) -->
+  <!-- Header -->
   <header class="site-header">
     <div class="container header-container center-header">
 
@@ -37,6 +37,7 @@
     </div>
   </header>
 
+
   <main class="container main-content">
 
     <!-- Zone recherche -->
@@ -45,7 +46,15 @@
         <input id="searchInput" type="search" placeholder="Rechercher des livres (ex: Robots, Love, War)" aria-label="Recherche de livres">
         <button id="searchBtn" aria-label="Lancer la recherche">🔎</button>
       </div>
+
       <div id="status" class="status" role="status" aria-live="polite"></div>
+
+      <!-- *** UNIQUE BOUTON VISUALISATIONS *** -->
+      <div style="margin-top:15px; text-align:center;">
+        <a href="visualizations.html" class="btn primary" style="text-decoration:none; padding:10px 22px; display:inline-block;">
+          Visualiser les données
+        </a>
+      </div>
     </section>
 
     <!-- Toggle mobile pour filtres -->
@@ -59,6 +68,7 @@
       </div>
 
       <form id="filters-form">
+
         <div class="field">
           <label for="author">Auteur</label>
           <input type="text" id="author" name="author" placeholder="ex: Isaac Asimov">
@@ -105,7 +115,6 @@
       </form>
 
       <div id="filters-chips" class="filters-chips"></div>
-
       <div id="filters-loader" class="filters-loader"></div>
       <div id="filters-status" class="filters-status" aria-live="polite"></div>
     </aside>
@@ -135,8 +144,6 @@
   <script src="assets/js/bg.js" defer></script>
   <script src="assets/js/app.js" defer></script>
   <script src="assets/js/readingAnim.js" defer></script>
-
-  <!-- Nouveaux scripts filtres -->
   <script src="assets/js/filters-ui.js" defer></script>
   <script src="assets/js/search-filters.js" defer></script>
 

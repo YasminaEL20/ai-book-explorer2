@@ -11,6 +11,26 @@ function safeSliceYear(pub) {
   return /^\d{4}$/.test(s) ? s : null;
 }
 
+function getThemePalette() {
+  const root = getComputedStyle(document.documentElement);
+  const accent = root.getPropertyValue('--accent').trim() || '#4fc3f7';
+  const accent2 = root.getPropertyValue('--accent-2').trim() || '#7bdcf6';
+  const text = root.getPropertyValue('--text').trim() || '#e6eef6';
+  const muted = root.getPropertyValue('--muted').trim() || '#9aa4ad';
+
+  const palette = [
+    accent,
+    accent2,
+    '#82e0ff',
+    '#6fc0e8',
+    '#5aaed8',
+    '#9fdfff',
+    '#cfefff'
+  ].map(c => c.trim());
+
+  return { accent, accent2, text, muted, palette };
+}
+
 //
 // TIMELINE (books per year)
 //
@@ -19,7 +39,7 @@ function buildYearCounts(items) {
   const counts = Object.create(null);
 
   items.forEach(it => {
-    const pub = it && it.volumeInfo && it.volumeInfo.publishedDate;
+    const pub = it?.volumeInfo?.publishedDate;
     const year = safeSliceYear(pub);
     if (!year) return;
     counts[year] = (counts[year] || 0) + 1;
@@ -34,6 +54,8 @@ let timelineChart = null;
 
 function createOrUpdateTimelineChart(canvasEl, labels = [], values = [], type = 'line') {
   if (!canvasEl) return;
+  const theme = getThemePalette();
+
   if (timelineChart) {
     if (timelineChart.config.type !== type) {
       timelineChart.destroy();
@@ -47,28 +69,49 @@ function createOrUpdateTimelineChart(canvasEl, labels = [], values = [], type = 
   }
 
   const ctx = canvasEl.getContext('2d');
+
+  const dataset = {
+    label: 'Nombre de livres',
+    data: values,
+    tension: 0.3,
+    fill: type === 'bar' ? true : false,
+    borderWidth: 2,
+    borderColor: theme.accent,
+    backgroundColor: type === 'bar' ? theme.accent + "33" : theme.accent2 + "33",
+    pointBackgroundColor: theme.accent2,
+    pointBorderColor: "#fff"
+  };
+
   const cfg = {
-    type: type,
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Nombre de livres',
-        data: values,
-        fill: false,
-        tension: 0.3,
-        borderWidth: 2
-      }]
-    },
+    type,
+    data: { labels, datasets: [dataset] },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { title: { display: true, text: 'Année' } },
-        y: { beginAtZero: true, title: { display: true, text: 'Nombre' }, ticks: { precision: 0 } }
+        x: {
+          ticks: { color: theme.text },
+          grid: { color: "rgba(255,255,255,0.05)" },
+          title: { display: true, text: 'Année', color: theme.muted }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { precision: 0, color: theme.text },
+          grid: { color: "rgba(255,255,255,0.05)" },
+          title: { display: true, text: 'Nombre', color: theme.muted }
+        }
       },
-      plugins: { legend: { display: true } }
+      plugins: {
+        legend: { labels: { color: theme.text } },
+        tooltip: {
+          titleColor: theme.text,
+          bodyColor: theme.text,
+          backgroundColor: "rgba(0,0,0,0.7)"
+        }
+      }
     }
   };
+
   timelineChart = new Chart(ctx, cfg);
   return timelineChart;
 }
@@ -76,10 +119,7 @@ function createOrUpdateTimelineChart(canvasEl, labels = [], values = [], type = 
 function updateTimelineFromItems(items, options = {}) {
   const { labels, values } = buildYearCounts(items);
   const canvas = document.getElementById('timelineChart');
-  if (!canvas) {
-    console.warn('timelineChart canvas introuvable');
-    return;
-  }
+  if (!canvas) return;
   const select = document.getElementById('chart-type');
   const type = options.type || (select ? select.value : 'line');
   createOrUpdateTimelineChart(canvas, labels, values, type);
@@ -97,8 +137,8 @@ function countTopAuthors(items) {
   items.forEach(it => {
     const authors = it?.volumeInfo?.authors;
     if (!authors) return;
-    authors.forEach(a => {
-      const name = String(a).trim();
+    authors.forEach(name => {
+      name = String(name).trim();
       if (!name) return;
       map[name] = (map[name] || 0) + 1;
     });
@@ -109,15 +149,23 @@ function countTopAuthors(items) {
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
-  const labels = sorted.map(s => s.name);
-  const values = sorted.map(s => s.count);
-  return { labels, values };
+  return {
+    labels: sorted.map(s => s.name),
+    values: sorted.map(s => s.count)
+  };
 }
 
 let topAuthorsChart = null;
 
 function createOrUpdateTopAuthorsChart(canvasEl, labels = [], values = [], type = 'bar') {
   if (!canvasEl) return;
+  const theme = getThemePalette();
+
+  const colors = labels.map((_, i) => {
+    const c = theme.palette[i % theme.palette.length];
+    return type === "pie" ? c : c + "99";
+  });
+
   if (topAuthorsChart) {
     if (topAuthorsChart.config.type !== type) {
       topAuthorsChart.destroy();
@@ -125,31 +173,51 @@ function createOrUpdateTopAuthorsChart(canvasEl, labels = [], values = [], type 
     } else {
       topAuthorsChart.data.labels = labels;
       topAuthorsChart.data.datasets[0].data = values;
+      topAuthorsChart.data.datasets[0].backgroundColor = colors;
       topAuthorsChart.update();
       return topAuthorsChart;
     }
   }
 
   const ctx = canvasEl.getContext('2d');
+
+  const dataset = {
+    label: "Nombre d'occurrences",
+    data: values,
+    borderWidth: 1,
+    backgroundColor: colors,
+    borderColor: colors.map(c => c.replace(/99$/, "")) // remove alpha for border
+  };
+
   const cfg = {
     type,
-    data: {
-      labels,
-      datasets: [{
-        label: "Nombre d'occurrences",
-        data: values,
-        borderWidth: 1,
-        backgroundColor: undefined // Chart.js will pick default colors
-      }]
-    },
+    data: { labels, datasets: [dataset] },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      scales: {
-        x: { title: { display: true, text: 'Auteur' } },
-        y: { beginAtZero: true, title: { display: true, text: 'Occurrences' }, ticks: { precision: 0 } }
-      },
-      plugins: { legend: { display: true } }
+      scales: type === 'bar'
+        ? {
+            x: {
+              ticks: { color: theme.text },
+              grid: { color: "rgba(255,255,255,0.05)" },
+              title: { display: true, text: 'Auteur', color: theme.muted }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { precision: 0, color: theme.text },
+              grid: { color: "rgba(255,255,255,0.05)" },
+              title: { display: true, text: 'Occurrences', color: theme.muted }
+            }
+          }
+        : {},
+      plugins: {
+        legend: { labels: { color: theme.text } },
+        tooltip: {
+          titleColor: theme.text,
+          bodyColor: theme.text,
+          backgroundColor: "rgba(0,0,0,0.7)"
+        }
+      }
     }
   };
 
@@ -160,7 +228,7 @@ function createOrUpdateTopAuthorsChart(canvasEl, labels = [], values = [], type 
 function updateTopAuthors(items, options = {}) {
   const { labels, values } = countTopAuthors(items);
   const canvas = document.getElementById('topAuthorsChart');
-  if (!canvas) { console.warn('topAuthorsChart introuvable'); return; }
+  if (!canvas) return;
   const select = document.getElementById('authors-chart-type');
   const type = options.type || (select ? select.value : 'bar');
   createOrUpdateTopAuthorsChart(canvas, labels, values, type);
@@ -172,9 +240,9 @@ window.updateTopAuthors = updateTopAuthors;
 // initial UI hookups for selects & default empty charts
 //
 window.addEventListener('load', () => {
-  // timeline init
   const tCanvas = document.getElementById('timelineChart');
   if (tCanvas) createOrUpdateTimelineChart(tCanvas, [], [], 'line');
+
   const tSelect = document.getElementById('chart-type');
   if (tSelect && tCanvas) {
     tSelect.addEventListener('change', () => {
@@ -185,9 +253,9 @@ window.addEventListener('load', () => {
     });
   }
 
-  // top authors init
   const aCanvas = document.getElementById('topAuthorsChart');
   if (aCanvas) createOrUpdateTopAuthorsChart(aCanvas, [], [], 'bar');
+
   const aSelect = document.getElementById('authors-chart-type');
   if (aSelect && aCanvas) {
     aSelect.addEventListener('change', () => {

@@ -20,20 +20,29 @@
 }
 
 .filters-toggle {
-  display: none; /* hidden on desktop */
+  display: block;          /*  Était hidden (display:none), on l'affiche ! */
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background: var(--accent);
+  background: var(--accent);  /* couleur du thème */
   color: #fff;
   border: none;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   font-size: 1.2rem;
   cursor: pointer;
-  z-index: 30;
+  z-index: 9999;             /* passe au-dessus de tout */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
+/* Hover effect (plus moderne) */
+.filters-toggle:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+}
+
 
 @media (max-width: 920px) {
   .filters-toggle { display: block; }

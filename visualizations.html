@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>AI Book Explorer — Visualisations</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/CSS/style.css" />
 </head>
 
 <body>
@@ -21,7 +21,7 @@
 
     <nav class="nav" role="navigation" aria-label="Main navigation">
       <a href="index.html">Accueil</a>
-      <a href="visualizations.html">Visualisations</a>
+      <a href="visualizations.html" aria-current="page">Visualisations</a>
     </nav>
 
     <button class="menu-btn" aria-expanded="false">Menu</button>
@@ -31,7 +31,7 @@
 <main class="container">
 
   <h1>Bienvenue dans AI-Book-Explorer — Visualisations</h1>
-  <p>Recherchez des livres grâce à Google Books et visualisez les données sous forme de graphiques.</p>
+  <p>Les graphiques ci-dessous se mettent automatiquement à jour à partir de la dernière recherche effectuée sur la page d'accueil (si disponible).</p>
 
   <!-- ======= Timeline section ======= -->
   <section id="charts-section">
@@ -43,12 +43,10 @@
         <option value="line">Ligne</option>
         <option value="bar">Barres</option>
       </select>
-
-      <button id="load-sample">Charger échantillon</button>
     </div>
 
     <div class="chart-wrap" style="height:360px; max-width:1000px;">
-      <canvas id="timelineChart" aria-label="Timeline chart"></canvas>
+      <canvas id="timelineChart" aria-label="Timeline chart" role="img"></canvas>
     </div>
   </section>
   <!-- ======= end Timeline section ======= -->
@@ -63,17 +61,13 @@
         <option value="bar">Barres</option>
         <option value="pie">Camembert</option>
       </select>
-
-      <button id="load-sample-authors">Charger échantillon auteurs</button>
     </div>
 
     <div class="chart-wrap" style="height:360px; max-width:1000px;">
-      <canvas id="topAuthorsChart" aria-label="Top authors chart"></canvas>
+      <canvas id="topAuthorsChart" aria-label="Top authors chart" role="img"></canvas>
     </div>
   </section>
   <!-- ======= end Top Authors section ======= -->
-
-  <!-- (tu peux ajouter d'autres sections/visualisations ici) -->
 
 </main>
 
@@ -85,9 +79,85 @@
 
 <!-- SCRIPTS: ordre important -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="assets/js/charts.js" defer></script>
-<script src="assets/js/app.js" defer></script>
-<script src="assets/js/ui.js" defer></script>
+<script src="assets/js/charts.js"></script> 
+<script src="assets/js/app.js"></script>    
+<script src="assets/js/ui.js"></script>
+
+<!-- Boot script: lit sessionStorage (lastSearchItems / lastSearchQuery), refetch si nécessaire,
+     et attache les handlers des selects pour forcer les mises à jour. -->
+<script>
+(function(){
+  const parseJSON = s => { try { return JSON.parse(s); } catch(e){ return null; } };
+
+  async function fetchBooksByQuery(q) {
+    if (!q || !q.trim()) return [];
+    const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=40`;
+    try {
+      const r = await fetch(url);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const d = await r.json();
+      return d.items || [];
+    } catch(e){
+      console.warn('[viz] Erreur API fetchBooksByQuery:', e);
+      return [];
+    }
+  }
+
+  async function bootVisualizations() {
+    console.log('[viz] bootVisualizations');
+    let items = parseJSON(sessionStorage.getItem('lastSearchItems'));
+    const query = sessionStorage.getItem('lastSearchQuery');
+
+    // 1) Utiliser données stockées
+    if (Array.isArray(items) && items.length > 0) {
+      console.log('[viz] Using stored items:', items.length);
+      window.updateTimelineFromItems && window.updateTimelineFromItems(items);
+      window.updateTopAuthors && window.updateTopAuthors(items);
+      return;
+    }
+
+    // 2) Sinon, tenter un refetch à partir de la dernière query
+    if (query) {
+      console.log('[viz] No stored items — refetching query:', query);
+      const fetched = await fetchBooksByQuery(query);
+      if (Array.isArray(fetched) && fetched.length > 0) {
+        try { sessionStorage.setItem('lastSearchItems', JSON.stringify(fetched)); } catch(e){}
+        window.updateTimelineFromItems && window.updateTimelineFromItems(fetched);
+        window.updateTopAuthors && window.updateTopAuthors(fetched);
+        return;
+      }
+    }
+
+    // 3) Si rien : message et charts vides (ou fallback si tu le souhaites plus tard)
+    console.warn('[viz] Aucune donnée disponible pour les visualisations (sessionStorage vide).');
+  }
+
+  function attachUI() {
+    const typeTimeline = document.getElementById('chart-type');
+    const typeAuthors = document.getElementById('authors-chart-type');
+
+    typeTimeline?.addEventListener('change', () => {
+      const items = parseJSON(sessionStorage.getItem('lastSearchItems')) || [];
+      window.updateTimelineFromItems && window.updateTimelineFromItems(items, { type: typeTimeline.value });
+    });
+
+    typeAuthors?.addEventListener('change', () => {
+      const items = parseJSON(sessionStorage.getItem('lastSearchItems')) || [];
+      window.updateTopAuthors && window.updateTopAuthors(items, { type: typeAuthors.value });
+    });
+  }
+
+  window.addEventListener('load', () => {
+    attachUI();
+    bootVisualizations();
+    // helper
+    window._vizDebug = {
+      reload: bootVisualizations,
+      getStored: () => parseJSON(sessionStorage.getItem('lastSearchItems')) || []
+    };
+  });
+})();
+</script>
 
 </body>
 </html>

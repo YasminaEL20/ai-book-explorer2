@@ -1,5 +1,6 @@
 // assets/js/app.js
 // Merged: search app logic + sample loaders for charts
+// Version modifiée — sauvegarde en sessionStorage pour visualisations
 
 /* -------------------------
    Sample data (charts demos)
@@ -50,6 +51,32 @@ const detailContent = document.getElementById('detailContent');
    ------------------------- */
 function escapeHtml(s=''){ return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
 
+/* Create a lightweight copy of items to store in sessionStorage:
+   keep only id and the fields useful for charts/visualization.
+*/
+function compactItemsForStorage(items = []) {
+  try {
+    return items.map(it => {
+      const vi = it.volumeInfo || {};
+      return {
+        id: it.id || null,
+        volumeInfo: {
+          title: vi.title || '',
+          authors: Array.isArray(vi.authors) ? vi.authors : (vi.authors ? [vi.authors] : []),
+          publishedDate: vi.publishedDate || '',
+          imageLinks: vi.imageLinks || null,
+          description: vi.description || '',
+          publisher: vi.publisher || '',
+          previewLink: vi.previewLink || ''
+        }
+      };
+    });
+  } catch (e) {
+    console.warn('compactItemsForStorage error', e);
+    return [];
+  }
+}
+
 /* -------------------------
    Skeleton / UI helpers
    ------------------------- */
@@ -87,6 +114,16 @@ async function searchBooks(query, startIndex = 0){
     const data = await res.json();
     const items = data.items || [];
     lastTotal = data.totalItems || 0;
+
+    // --- SAVE: store a compact version for visualizations (sessionStorage) ---
+    try {
+      const compact = compactItemsForStorage(items);
+      sessionStorage.setItem('lastSearchItems', JSON.stringify(compact));
+      sessionStorage.setItem('lastSearchQuery', String(query || ''));
+    } catch (e) {
+      console.warn('Impossible de stocker lastSearchItems en sessionStorage', e);
+    }
+
     if(items.length === 0){
       statusEl && (statusEl.textContent = "Aucun résultat.");
       resultsEl.innerHTML = "";
@@ -152,6 +189,10 @@ function initLazyImages(){
     tmp.onload = () => {
       img.src = src;
       img.classList.add('loaded');
+      // set dimensions to avoid layout shift
+      img.setAttribute('width','100');
+      img.setAttribute('height','140');
+      img.style.aspectRatio = '100 / 140';
     };
     tmp.onerror = () => {
       img.src = 'assets/img/placeholder.png';
@@ -178,6 +219,7 @@ async function showBookDetail(id){
   detailModal.classList.add('open'); detailModal.setAttribute('aria-hidden','false');
   try {
     const res = await fetch(`https://www.googleapis.com/books/v1/volumes/${id}`);
+    if(!res.ok) throw new Error('Erreur réseau');
     const data = await res.json();
     const info = data.volumeInfo || {};
     detailContent.innerHTML = `
@@ -189,6 +231,7 @@ async function showBookDetail(id){
       <p><a href="${info.previewLink||'#'}" target="_blank" rel="noopener">Voir preview</a></p>   
     `;
   } catch (e){
+    console.error('showBookDetail error', e);
     detailContent.innerHTML = '<p>Impossible de charger les détails.</p>';
   }
 }
@@ -204,7 +247,7 @@ function closeModal(){
 function updatePagination(total){
   if(!pageInfo || !prevBtn || !nextBtn) return;
   const currentPage = Math.floor(currentStartIndex / MAX_RESULTS) + 1;
-  const totalPages = Math.ceil(total / MAX_RESULTS) || 1;
+  const totalPages = Math.ceil((total || 1) / MAX_RESULTS) || 1;
   pageInfo.textContent = `${currentPage} / ${totalPages}`;
   prevBtn.disabled = currentStartIndex === 0;
   nextBtn.disabled = (currentStartIndex + MAX_RESULTS) >= total;
@@ -265,3 +308,11 @@ window.addEventListener('load', () => {
     });
   }
 });
+
+/* -------------------------
+   Debug helper: expose last search compact items
+   ------------------------- */
+window.getLastSearchItems = function(){
+  try { return JSON.parse(sessionStorage.getItem('lastSearchItems')||'[]'); }
+  catch(e){ return []; }
+};
